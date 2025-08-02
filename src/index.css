@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'Acumin-Pro';
+  src: url('./assets/fonts/Acumin-Pro.otf');
+}
+
+@font-face {
+  font-family: 'Pragmatica';
+  src: url('./assets/fonts/Pragmatica.otf');
+}
+
+* {
+  font-family: 'Acumin-Pro', sans-serif;
+  scroll-behavior: smooth;
+}
