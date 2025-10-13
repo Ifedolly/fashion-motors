@@ -1,0 +1,53 @@
+.confirmation-page {
+  text-align: center;
+  padding: 6rem 1rem;
+  background: #fff;
+  color: #000;
+  min-height: 80vh;
+}
+
+.confirmation-title {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.confirmation-message {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  line-height: 1.6;
+}
+
+.confirmation-date {
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+.confirmation-note {
+  margin-bottom: 2rem;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+}
+
+.confirmation-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.home-btn,
+.services-btn {
+  background: #000;
+  color: #fff;
+  text-decoration: none;
+  padding: 0.8rem 1.5rem;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+}
+
+.home-btn:hover,
+.services-btn:hover {
+  background: #5e100a;
+}

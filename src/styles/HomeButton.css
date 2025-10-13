@@ -1,0 +1,17 @@
+.home-btn {
+  position: absolute;
+  top: 20px;
+  left: 25px;
+  color: white;
+  font-size: 0.95rem;
+  text-decoration: none;
+  border: 1px solid white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(6px);
+}
+
+.home-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}

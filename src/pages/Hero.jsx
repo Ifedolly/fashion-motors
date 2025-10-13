@@ -6,7 +6,11 @@ const Hero = () => {
   const navigate = useNavigate();
 
   const handleClick = (type) => {
-    navigate(`/services?type=${type}`);
+    if (type === "repair") {
+      navigate("/services/repair");
+    } else if (type === "enhancement") {
+      navigate("/services/enhancement");
+    }
   };
 
   return (
@@ -21,7 +25,6 @@ const Hero = () => {
         <source src="/videos/car1.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
-
       <div className="hero-overlay">
         <button className="cta-btn" onClick={() => handleClick("repair")}>
           Repair
