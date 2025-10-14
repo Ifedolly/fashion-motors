@@ -19,7 +19,7 @@
 
 @font-face {
   font-family: 'Syncopate';
-  src: url('./assets/fonts/Syncopate-Bold.ttf') format('truetype');
+  src: url('/fonts/Syncopate-Bold.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }

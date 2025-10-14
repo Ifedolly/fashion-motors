@@ -37,7 +37,7 @@ const Navbar = () => {
             <User className="user-icon" size={22} onClick={toggleUserMenu} />
             {showUserMenu && (
               <div className="user-dropdown">
-                <button onClick={() => setShowSignUpModal(true)}>Sign Up</button>
+                <button onClick={() => setShowSignUpModal(true)}>SIGN UP</button>
                 <Link to="/login" onClick={() => setShowUserMenu(false)}>
                   Login
                 </Link>

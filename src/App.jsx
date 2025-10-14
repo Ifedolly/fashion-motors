@@ -10,6 +10,11 @@ import Repair from "./pages/Repair";
 import Enhancement from "./pages/Enhancement";
 import Booking from "./pages/Booking";
 import BookingConfirmation from "./pages/BookingConfirmation";
+import CustomerDashboard from "./pages/CustomerDashboard";
+
+//Auth
+import Login from "./components/auth/Login";
+import SignUp from "./components/auth/SignUp";
 
 const App = () => {
   const location = useLocation();
@@ -28,6 +33,9 @@ const App = () => {
           <Route path="/services/enhancement" element={<Enhancement />} />
           <Route path="/booking" element={<Booking />} />
           <Route path="/booking-confirmation" element={<BookingConfirmation />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/customer-dashboard" element={<CustomerDashboard />} />
         </Routes>
       </main>
     </div>

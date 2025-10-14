@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "../styles/Booking.css";
+import { db, auth } from "../firebaseConfig";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 
 const Booking = () => {
   const location = useLocation();
@@ -18,13 +20,35 @@ const Booking = () => {
     notes: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    navigate("/booking-confirmation", { state: formData });
+    setLoading(true);
+
+    try {
+      const user = auth.currentUser;
+      const userId = user ? user.uid : "guest";
+
+      await addDoc(collection(db, "bookings"), {
+        ...formData,
+        userId,
+        status: "pending",
+        createdAt: serverTimestamp(),
+      });
+
+      alert("Booking confirmed successfully!");
+      navigate("/booking-confirmation", { state: formData });
+    } catch (error) {
+      console.error("Error saving booking:", error);
+      alert("Failed to save booking. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -109,8 +133,8 @@ const Booking = () => {
           onChange={handleChange}
         ></textarea>
 
-        <button type="submit" className="submit-btn">
-          Confirm Booking
+        <button type="submit" className="submit-btn" disabled={loading}>
+          {loading ? "Submitting..." : "Confirm Booking"}
         </button>
       </form>
     </div>
