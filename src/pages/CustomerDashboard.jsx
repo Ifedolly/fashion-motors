@@ -1,26 +1,29 @@
 import React, { useEffect, useState } from "react";
-import { db } from "../firebaseConfig";
-import { collection, getDocs } from "firebase/firestore";
+import { db, auth } from "../firebaseConfig";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
 import "../styles/CustomerDashboard.css";
 
 const CustomerDashboard = () => {
   const [bookings, setBookings] = useState([]);
 
   useEffect(() => {
-    const fetchBookings = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, "bookings"));
-        const bookingsList = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setBookings(bookingsList);
-      } catch (error) {
-        console.error("Error fetching bookings:", error);
-      }
-    };
+    const user = auth.currentUser;
+    if (!user) return;
 
-    fetchBookings();
+    // Firestore query for this user’s bookings
+    const q = query(collection(db, "bookings"), where("email", "==", user.email));
+
+    // Real-time listener
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const userBookings = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setBookings(userBookings);
+    });
+
+    
+    return () => unsubscribe();
   }, []);
 
   return (
@@ -55,7 +58,7 @@ const CustomerDashboard = () => {
                   </span>
                 </p>
                 <p>Date: {booking.date || "N/A"}</p>
-                <p>Time: {booking.time || "N/A"}</p>
+                <p>Vehicle: {booking.vehicle || "N/A"}</p>
               </div>
             ))
           )}

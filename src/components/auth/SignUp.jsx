@@ -27,7 +27,7 @@ const SignUp = ({ onClose }) => {
         fullName,
         email,
         phone,
-        role: "customer", // default role
+        role: "customer", // default user
         createdAt: new Date(),
       });
 

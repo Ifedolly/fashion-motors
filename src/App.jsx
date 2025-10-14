@@ -10,7 +10,10 @@ import Repair from "./pages/Repair";
 import Enhancement from "./pages/Enhancement";
 import Booking from "./pages/Booking";
 import BookingConfirmation from "./pages/BookingConfirmation";
+import ProtectedRoute from "./components/common/ProtectedRoute";
+import AdminDashboard from "./pages/AdminDashboard";
 import CustomerDashboard from "./pages/CustomerDashboard";
+import StaffDashboard from "./pages/StaffDashboard";
 
 //Auth
 import Login from "./components/auth/Login";
@@ -35,7 +38,31 @@ const App = () => {
           <Route path="/booking-confirmation" element={<BookingConfirmation />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/customer-dashboard" element={<CustomerDashboard />} />
+
+          <Route
+            path="/admin-dashboard"
+            element={
+              <ProtectedRoute allowedRoles={["admin"]}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/staff-dashboard"
+            element={
+              <ProtectedRoute allowedRoles={["staff"]}>
+                <StaffDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/customer-dashboard"
+            element={
+              <ProtectedRoute allowedRoles={["customer"]}>
+                <CustomerDashboard />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </main>
     </div>

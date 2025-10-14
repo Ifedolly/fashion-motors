@@ -3,12 +3,14 @@ import "../../styles/SignUp.css";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom"; // ✅ import
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate(); // ✅ hook
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,11 +18,9 @@ const Login = () => {
     setError("");
 
     try {
-      // Authenticate user
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Retrieve user role from Firestore
       const docRef = doc(db, "users", user.uid);
       const docSnap = await getDoc(docRef);
 
@@ -30,13 +30,13 @@ const Login = () => {
 
         alert(`Login successful! Welcome ${role.toUpperCase()}`);
 
-        // Redirect based on role
+        // ✅ redirect using React Router
         if (role === "admin") {
-          window.location.href = "/admin-dashboard";
+          navigate("/admin-dashboard");
         } else if (role === "staff") {
-          window.location.href = "/staff-dashboard";
+          navigate("/staff-dashboard");
         } else {
-          window.location.href = "/";
+          navigate("/customer-dashboard");
         }
       } else {
         setError("No user data found for this account.");

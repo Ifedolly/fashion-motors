@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import "../styles/Booking.css";
 import { db, auth } from "../firebaseConfig";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
@@ -7,7 +7,6 @@ import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 const Booking = () => {
   const location = useLocation();
   const navigate = useNavigate();
-
   const selectedService = location.state?.service || "General Assessment";
 
   const [formData, setFormData] = useState({
@@ -32,11 +31,16 @@ const Booking = () => {
 
     try {
       const user = auth.currentUser;
-      const userId = user ? user.uid : "guest";
+      if (!user) {
+        alert("You must be logged in to book a service.");
+        setLoading(false);
+        return;
+      }
 
       await addDoc(collection(db, "bookings"), {
         ...formData,
-        userId,
+        userId: user.uid,        // use UID to identify owner
+        email: user.email,       // store email for reference
         status: "pending",
         createdAt: serverTimestamp(),
       });
@@ -53,86 +57,34 @@ const Booking = () => {
 
   return (
     <div className="booking-page">
-      {/* Header */}
       <div className="booking-header">
-        <Link to={-1} className="back-btn">
-          ← Back
-        </Link>
+        <Link to={-1} className="back-btn">← Back</Link>
         <h1 className="booking-title">Book Appointment</h1>
       </div>
 
-      {/* Selected Service Display */}
       <p className="selected-service">
         {selectedService === "General Assessment" ? (
           <>
-            Booking a <strong>General Vehicle Assessment</strong> — we'll inspect
-            your vehicle to identify needed repairs or enhancements.
+            Booking a <strong>General Vehicle Assessment</strong> — we'll inspect your vehicle.
           </>
         ) : (
-          <>
-            Booking for: <strong>{selectedService}</strong>
-          </>
+          <>Booking for: <strong>{selectedService}</strong></>
         )}
       </p>
 
-      {/* Booking Form */}
       <form className="booking-form" onSubmit={handleSubmit}>
-        <input
-          name="name"
-          placeholder="Full Name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="email"
-          name="email"
-          placeholder="Email Address"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="phone"
-          placeholder="Phone Number"
-          value={formData.phone}
-          onChange={handleChange}
-          required
-        />
-        <input
-          name="vehicle"
-          placeholder="Vehicle Type (e.g., Toyota Camry)"
-          value={formData.vehicle}
-          onChange={handleChange}
-        />
-
-        <select
-          name="service"
-          value={formData.service}
-          onChange={handleChange}
-          required
-        >
+        <input name="name" placeholder="Full Name" value={formData.name} onChange={handleChange} required />
+        <input type="email" name="email" placeholder="Email Address" value={formData.email} onChange={handleChange} required />
+        <input name="phone" placeholder="Phone Number" value={formData.phone} onChange={handleChange} required />
+        <input name="vehicle" placeholder="Vehicle Type (e.g., Toyota Camry)" value={formData.vehicle} onChange={handleChange} />
+        <select name="service" value={formData.service} onChange={handleChange} required>
           <option value="">Select Service Type</option>
           <option value="Repair">Repair</option>
           <option value="Enhancement">Enhancement</option>
           <option value="General Assessment">General Assessment</option>
         </select>
-
-        <input
-          type="date"
-          name="date"
-          value={formData.date}
-          onChange={handleChange}
-          required
-        />
-
-        <textarea
-          name="notes"
-          placeholder={`Additional notes about your ${formData.service.toLowerCase()}...`}
-          value={formData.notes}
-          onChange={handleChange}
-        ></textarea>
-
+        <input type="date" name="date" value={formData.date} onChange={handleChange} required />
+        <textarea name="notes" placeholder={`Additional notes about your ${formData.service.toLowerCase()}...`} value={formData.notes} onChange={handleChange}></textarea>
         <button type="submit" className="submit-btn" disabled={loading}>
           {loading ? "Submitting..." : "Confirm Booking"}
         </button>
