@@ -39,9 +39,10 @@ const Booking = () => {
 
       await addDoc(collection(db, "bookings"), {
         ...formData,
-        userId: user.uid,        // use UID to identify owner
-        email: user.email,       // store email for reference
-        status: "pending",
+        userId: user.uid,
+        email: user.email,
+        bookingStatus: "pending",   // 🆕 appointment confirmation status
+        serviceStatus: "pending",   // 🆕 service progress status
         createdAt: serverTimestamp(),
       });
 
@@ -54,6 +55,7 @@ const Booking = () => {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="booking-page">

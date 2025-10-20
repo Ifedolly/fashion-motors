@@ -1,66 +1,63 @@
-import React, { useEffect, useState } from "react";
-import { db } from "../firebaseConfig";
-import { collection, getDocs } from "firebase/firestore";
-import "../styles/CustomerDashboard.css"; // can reuse the same CSS
+import React, { useState } from "react";
+import "../styles/AdminDashboard.css";
+import AdminOverview from "./AdminOverview";
+import AdminBookings from "./AdminBookings";
+import AdminServices from "./AdminServices";
+import AdminProfile from "./AdminProfile";
 
 const AdminDashboard = () => {
-  const [bookings, setBookings] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("overview");
 
-  useEffect(() => {
-    const fetchBookings = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, "bookings"));
-        const allBookings = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setBookings(allBookings);
-      } catch (error) {
-        console.error("Error fetching bookings:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBookings();
-  }, []);
+  const renderContent = () => {
+    switch (activeTab) {
+      case "overview":
+        return <AdminOverview />;
+      case "bookings":
+        return <AdminBookings />;
+      case "services":
+        return <AdminServices />;
+      case "profile":
+        return <AdminProfile />;
+      default:
+        return <AdminOverview />;
+    }
+  };
 
   return (
-    <div className="dashboard-container">
-      <header className="dashboard-header">
-        <h2>Admin Dashboard 👨‍💼</h2>
-        <p>View all bookings in the system</p>
-      </header>
+    <div className="admin-dashboard">
+      {/* Sidebar */}
+      <aside className="sidebar">
+        <h2>Admin Panel</h2>
+        <ul>
+          <li
+            className={activeTab === "overview" ? "active" : ""}
+            onClick={() => setActiveTab("overview")}
+          >
+            Overview
+          </li>
+          <li
+            className={activeTab === "bookings" ? "active" : ""}
+            onClick={() => setActiveTab("bookings")}
+          >
+            Bookings
+          </li>
+          <li
+            className={activeTab === "services" ? "active" : ""}
+            onClick={() => setActiveTab("services")}
+          >
+            Services
+          </li>
+          <li
+            className={activeTab === "profile" ? "active" : ""}
+            onClick={() => setActiveTab("profile")}
+          >
+            Profile
+          </li>
+        </ul>
+      </aside>
 
-      <section className="dashboard-bookings">
-        <h3>All Bookings</h3>
-
-        {loading ? (
-          <p>Loading bookings...</p>
-        ) : bookings.length === 0 ? (
-          <p>No bookings found.</p>
-        ) : (
-          <div className="bookings-list">
-            {bookings.map((booking) => (
-              <div key={booking.id} className="booking-card">
-                <h4>{booking.service}</h4>
-                <p>
-                  Customer: {booking.fullName} ({booking.email})
-                </p>
-                <p>
-                  Status:{" "}
-                  <span className={`status ${booking.status || "pending"}`}>
-                    {booking.status || "Pending"}
-                  </span>
-                </p>
-                <p>Date: {booking.date || "N/A"}</p>
-                <p>Vehicle: {booking.vehicle || "N/A"}</p>
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
+      {/* Main Content */}
+      <main className="dashboard-content">{renderContent()}</main>
     </div>
   );
 };

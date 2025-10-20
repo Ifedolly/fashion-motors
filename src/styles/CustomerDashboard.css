@@ -76,6 +76,53 @@
   color: #008c45;
 }
 
+/* Admin Dashboard */
+
+.admin-dashboard {
+  display: flex;
+  min-height: 100vh;
+  background: #f9f9f9;
+  font-family: 'Syncopate', sans-serif;
+}
+
+.admin-sidebar {
+  width: 230px;
+  background: black;
+  color: white;
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-sidebar h2 {
+  font-size: 1.3rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.admin-sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.admin-sidebar li {
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+
+.admin-sidebar li:hover,
+.admin-sidebar li.active {
+  background: #222;
+}
+
+.admin-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
 @media (max-width: 600px) {
   .dashboard-container {
     padding: 1.2rem;
