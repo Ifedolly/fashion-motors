@@ -1,29 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../firebaseConfig";
-import { collection, getDocs, updateDoc, doc } from "firebase/firestore";
-import "../styles/AdminDashboard.css"; // make sure this is imported
+import { collection, onSnapshot, updateDoc, doc } from "firebase/firestore";
+import "../styles/AdminDashboard.css";
 
 const AdminBookings = () => {
   const [bookings, setBookings] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchBookings = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, "bookings"));
-        const allBookings = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setBookings(allBookings);
-      } catch (error) {
-        console.error("Error fetching bookings:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchBookings();
+    // Real-time listener for bookings collection
+    const unsubscribe = onSnapshot(collection(db, "bookings"), (snapshot) => {
+      const allBookings = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setBookings(allBookings);
+      setLoading(false);
+    });
+
+    // Clean up listener on component unmount
+    return () => unsubscribe();
   }, []);
 
   const handleStatusChange = async (bookingId, newStatus) => {
@@ -31,12 +28,6 @@ const AdminBookings = () => {
       setUpdating(true);
       const bookingRef = doc(db, "bookings", bookingId);
       await updateDoc(bookingRef, { status: newStatus });
-
-      setBookings((prev) =>
-        prev.map((b) =>
-          b.id === bookingId ? { ...b, status: newStatus } : b
-        )
-      );
     } catch (error) {
       console.error("Error updating booking status:", error);
     } finally {

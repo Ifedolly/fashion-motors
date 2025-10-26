@@ -5,6 +5,14 @@
   font-family: 'Syncopate', sans-serif;
 }
 
+/* .dashboard-topbar {
+  display: flex;
+  justify-content: flex-start;
+  padding: 10px 20px;
+  margin-bottom: 10px;
+  background: black;
+} */
+
 .dashboard-header {
   text-align: center;
   margin-bottom: 2rem;

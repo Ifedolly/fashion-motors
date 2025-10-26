@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
 import { Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -8,8 +9,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
   const [isAuthorized, setIsAuthorized] = useState(false);
 
   useEffect(() => {
-    const checkUser = async () => {
-      const user = auth.currentUser;
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (!user) {
         setIsAuthorized(false);
         setLoading(false);
@@ -19,6 +19,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
       try {
         const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
+
         if (docSnap.exists()) {
           const role = docSnap.data().role;
           setIsAuthorized(allowedRoles.includes(role));
@@ -31,9 +32,9 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
       } finally {
         setLoading(false);
       }
-    };
+    });
 
-    checkUser();
+    return () => unsubscribe();
   }, [allowedRoles]);
 
   if (loading) return <p>Loading...</p>;

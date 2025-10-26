@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { db, auth } from "../firebaseConfig";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
+import HomeButton from "../components/common/HomeButton";
 import "../styles/CustomerDashboard.css";
 
 const CustomerDashboard = () => {
@@ -27,7 +28,11 @@ const CustomerDashboard = () => {
   }, []);
 
   return (
+
     <div className="dashboard-container">
+      <div className="dashboard-topbar">
+        <HomeButton />
+      </div>
       <header className="dashboard-header">
         <h2>Welcome back 👋</h2>
         <p>Manage your bookings and explore our services</p>

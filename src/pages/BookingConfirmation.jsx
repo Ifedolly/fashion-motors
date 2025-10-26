@@ -1,10 +1,15 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "../styles/BookingConfirmation.css";
 
 const BookingConfirmation = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const booking = location.state || {};
+
+  const handleBack = () => {
+    navigate("/customer-dashboard", { replace: true });
+  };
 
   return (
     <div className="confirmation-page">
@@ -27,7 +32,9 @@ const BookingConfirmation = () => {
       </p>
 
       <div className="confirmation-actions">
-        <Link to="/" className="home-btn">Back to Home</Link>
+        <button onClick={handleBack} className="home-btn">
+          Back to Dashboard
+        </button>
       </div>
     </div>
   );

@@ -46,8 +46,8 @@ const Booking = () => {
         createdAt: serverTimestamp(),
       });
 
-      alert("Booking confirmed successfully!");
       navigate("/booking-confirmation", { state: formData });
+
     } catch (error) {
       console.error("Error saving booking:", error);
       alert("Failed to save booking. Please try again.");
@@ -60,7 +60,9 @@ const Booking = () => {
   return (
     <div className="booking-page">
       <div className="booking-header">
-        <Link to={-1} className="back-btn">← Back</Link>
+        <button onClick={() => window.history.back()} className="back-btn">
+          ⟵ Back
+        </button>
         <h1 className="booking-title">Book Appointment</h1>
       </div>
 

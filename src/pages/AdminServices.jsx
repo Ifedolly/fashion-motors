@@ -6,14 +6,14 @@ const AdminServices = () => {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch all confirmed bookings (these are active services)
+  // Fetch all confirmed bookings (active services)
   useEffect(() => {
     const fetchServices = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, "bookings"));
         const confirmedBookings = querySnapshot.docs
           .map((docSnap) => ({ id: docSnap.id, ...docSnap.data() }))
-          .filter((item) => item.status === "confirmed"); // Only confirmed ones
+          .filter((item) => item.status === "confirmed"); 
         setServices(confirmedBookings);
       } catch (error) {
         console.error("Error fetching services:", error);
