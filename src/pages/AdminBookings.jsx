@@ -1,101 +1,95 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../firebaseConfig";
-import { collection, onSnapshot, updateDoc, doc } from "firebase/firestore";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import "../styles/AdminDashboard.css";
 
 const AdminBookings = () => {
   const [bookings, setBookings] = useState([]);
-  const [updating, setUpdating] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState("all");
 
   useEffect(() => {
-    // Real-time listener for bookings collection
-    const unsubscribe = onSnapshot(collection(db, "bookings"), (snapshot) => {
-      const allBookings = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setBookings(allBookings);
-      setLoading(false);
+    const q = query(collection(db, "bookings"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const data = snapshot.docs.map((doc) => {
+        const info = doc.data();
+
+        return {
+          id: doc.id,
+          fullName: info.fullName || info.name || "Unknown User",
+          email: info.email || "No email",
+          service:
+            info.service ||
+            info.serviceName ||
+            info.serviceType ||
+            "Not specified",
+          date:
+            info.date ||
+            (info.createdAt && info.createdAt.toDate().toLocaleDateString()) ||
+            "No date",
+          vehicle: info.vehicle || "Not provided",
+          status: (info.status || "pending").toLowerCase(),
+        };
+      });
+
+      setBookings(data);
     });
 
-    // Clean up listener on component unmount
     return () => unsubscribe();
   }, []);
 
-  const handleStatusChange = async (bookingId, newStatus) => {
-    try {
-      setUpdating(true);
-      const bookingRef = doc(db, "bookings", bookingId);
-      await updateDoc(bookingRef, { status: newStatus });
-    } catch (error) {
-      console.error("Error updating booking status:", error);
-    } finally {
-      setUpdating(false);
-    }
-  };
+  const filteredBookings = bookings.filter((b) => {
+    if (filter === "all") return true;
+    return b.status === filter;
+  });
 
   return (
     <div className="admin-bookings">
-      <h2>All Bookings</h2>
-      <p>Approve or reject customer bookings below.</p>
+      <h2>Bookings</h2>
+      <p>Manage all service bookings here</p>
 
-      {loading ? (
-        <p>Loading bookings...</p>
-      ) : bookings.length === 0 ? (
-        <p>No bookings found.</p>
-      ) : (
-        <div className="bookings-grid">
-          {bookings.map((b) => (
-            <div key={b.id} className="booking-card">
-              <h3>{b.service || "Service not specified"}</h3>
+      {/* Filter Buttons */}
+      <div className="filter-buttons">
+        {["all", "pending", "confirmed", "rejected"].map((status) => (
+          <button
+            key={status}
+            className={`filter-btn ${filter === status ? "active" : ""}`}
+            onClick={() => setFilter(status)}
+          >
+            {status.charAt(0).toUpperCase() + status.slice(1)}
+          </button>
+        ))}
+      </div>
+
+      <div className="bookings-list">
+        {filteredBookings.length > 0 ? (
+          filteredBookings.map((booking) => (
+            <div key={booking.id} className="booking-card">
+              <h4>{booking.service}</h4>
+
               <p>
-                <strong>Customer:</strong> {b.fullName} ({b.email})
+                <strong>Customer:</strong> {booking.fullName}
               </p>
+
               <p>
-                <strong>Date:</strong> {b.date || "N/A"}
+                <strong>Date:</strong> {booking.date}
               </p>
+
               <p>
-                <strong>Vehicle:</strong> {b.vehicle || "N/A"}
+                <strong>Vehicle:</strong> {booking.vehicle}
               </p>
 
               <p>
                 <strong>Status:</strong>{" "}
-                <span
-                  className={`status-text ${
-                    b.status === "confirmed"
-                      ? "status-confirmed"
-                      : b.status === "rejected"
-                      ? "status-rejected"
-                      : "status-pending"
-                  }`}
-                >
-                  {b.status || "Pending"}
+                <span className={`status ${booking.status}`}>
+                  {booking.status}
                 </span>
               </p>
-
-              {b.status !== "confirmed" && b.status !== "rejected" && (
-                <div className="btn-container">
-                  <button
-                    onClick={() => handleStatusChange(b.id, "confirmed")}
-                    className="confirm-btn"
-                    disabled={updating}
-                  >
-                    Confirm
-                  </button>
-                  <button
-                    onClick={() => handleStatusChange(b.id, "rejected")}
-                    className="reject-btn"
-                    disabled={updating}
-                  >
-                    Reject
-                  </button>
-                </div>
-              )}
             </div>
-          ))}
-        </div>
-      )}
+          ))
+        ) : (
+          <p>No {filter} bookings found.</p>
+        )}
+      </div>
     </div>
   );
 };

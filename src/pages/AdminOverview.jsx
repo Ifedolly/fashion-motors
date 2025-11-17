@@ -20,29 +20,21 @@ const AdminOverview = () => {
       const pending = bookingsData.filter((b) => !b.status || b.status === "pending").length;
       const rejected = bookingsData.filter((b) => b.status === "rejected").length;
 
-      setStats((prev) => ({
-        ...prev,
+      // Total Services = confirmed bookings
+      const totalServices = confirmed;
+
+      setStats({
         totalBookings: snapshot.size,
         confirmed,
         pending,
         rejected,
-      }));
+        totalServices,
+      });
     });
 
-    // Listen for real-time updates on services
-    const unsubscribeServices = onSnapshot(collection(db, "services"), (snapshot) => {
-      setStats((prev) => ({
-        ...prev,
-        totalServices: snapshot.size,
-      }));
-    });
-
-    // Cleanup listeners on unmount
-    return () => {
-      unsubscribeBookings();
-      unsubscribeServices();
-    };
+    return () => unsubscribeBookings();
   }, []);
+
 
   return (
     <div className="admin-overview">

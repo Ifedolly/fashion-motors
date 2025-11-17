@@ -50,6 +50,7 @@
 .dashboard-content {
   flex: 1;
   background: #fafafa;
+  background: rgb(224, 224, 224);
   padding: 2rem;
   overflow-y: auto;
 }
@@ -157,6 +158,34 @@
   transform: translateY(-3px);
 }
 
+.filter-buttons {
+  display: flex;
+  gap: 10px;
+  margin: 1rem 0 1.5rem;
+}
+
+.filter-btn {
+  background: none;
+  border: 1px solid #000;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: capitalize;
+  font-family: 'Syncopate', sans-serif;
+}
+
+.filter-btn:hover {
+  background: #000;
+  color: #fff;
+}
+
+.filter-btn.active {
+  background: #000;
+  color: #fff;
+}
+
+
 /* STATUS COLORS */
 .status-text {
   font-weight: bold;
@@ -256,3 +285,154 @@
   color: #444;
 }
 
+/* ADMIN SERVICES STYLING */
+.admin-services {
+  padding: 2rem;
+}
+
+/* FILTER BUTTONS */
+.filter-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.filter-buttons button {
+  padding: 0.6rem 1.2rem;
+  border: 1px solid #d3d3d3;
+  background: #f8f8f8;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  transition: 0.2s ease;
+}
+
+.filter-buttons button:hover {
+  background: #e9e9e9;
+}
+
+/* ACTIVE FILTER */
+.filter-buttons button.active {
+  background: black;
+  color: white;
+  border-color: black;
+}
+
+/* SERVICE CARDS */
+.booking-card {
+  background: white;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  border: 1px solid #e3e3e3;
+  box-shadow: 0px 2px 4px rgba(0,0,0,0.06);
+}
+
+.booking-card h4 {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.booking-card p {
+  margin: 4px 0;
+  font-size: 0.9rem;
+}
+
+/* DROPDOWN */
+.booking-card select {
+  margin-top: 0.8rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background: #fdfdfd;
+}
+
+/* ADMIN PROFILE STYLING */
+
+.admin-profile {
+  padding: 1.5rem;
+}
+
+.admin-profile h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.profile-container {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.profile-left {
+  flex: 1;
+  min-width: 200px;
+  text-align: center;
+}
+
+.avatar {
+  width: 100px;
+  height: 100px;
+  background-color: #111;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  margin: 0 auto 1rem;
+}
+
+.role {
+  color: #555;
+  font-size: 0.9rem;
+}
+
+.profile-right {
+  flex: 2;
+  min-width: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.profile-right label {
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.profile-right input {
+  padding: 0.6rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-family: inherit;
+}
+
+.profile-right input:disabled {
+  background: #f0f0f0;
+}
+
+.profile-right button {
+  margin-top: 1rem;
+  padding: 0.7rem;
+  border: none;
+  border-radius: 5px;
+  background-color: black;
+  color: white;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.profile-right button:hover {
+  background-color: #333;
+}
+
+@media (max-width: 768px) {
+  .profile-container {
+    flex-direction: column;
+    align-items: center;
+  }
+}
