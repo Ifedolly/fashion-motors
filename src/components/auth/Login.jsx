@@ -3,14 +3,15 @@ import "../../styles/SignUp.css";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
-import { useNavigate } from "react-router-dom"; // ✅ import
+import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast"; 
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const navigate = useNavigate(); // ✅ hook
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,9 +29,10 @@ const Login = () => {
         const userData = docSnap.data();
         const role = userData.role;
 
-        alert(`Login successful! Welcome ${role.toUpperCase()}`);
+        //Show toast instead of alert
+        toast.success(`Welcome ${role.toUpperCase()}!`);
 
-        // ✅ redirect using React Router
+        //Redirect based on role
         if (role === "admin") {
           navigate("/admin-dashboard");
         } else if (role === "staff") {
@@ -50,6 +52,7 @@ const Login = () => {
 
   return (
     <div className="signup-overlay">
+      <Toaster position="top-right" reverseOrder={false} /> {/*toast container */}
       <div className="signup-modal">
         <h2>Login</h2>
 

@@ -1,5 +1,6 @@
 import React from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 // Layout
 import Navbar from "./components/layout/Navbar";
@@ -27,7 +28,9 @@ const App = () => {
 
   return (
     <div className="app">
+      
       {showNavbar && <Navbar />}
+      <Toaster position="top-right" reverseOrder={false} />
 
       <main style={{ minHeight: "80vh" }}>
         <Routes>
